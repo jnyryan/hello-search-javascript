@@ -9,10 +9,11 @@ class FullTextSearch {
     this.indexer = new Indexer(docs);
   }
 
-  stats(){
-    console.log(`#Indexed Documents: ${Object.keys(this.documentRepository).length}`)
-    console.log(`#Corpus: ${Object.keys(this.indexer.indexRepository).length}`)
-
+  stats() {
+    console.log(
+      `#Indexed Documents: ${Object.keys(this.documentRepository).length}`
+    );
+    console.log(`#Corpus: ${Object.keys(this.indexer.indexRepository).length}`);
   }
   reindex() {
     this.indexer.addBulk(this.documentRepository);
@@ -22,7 +23,6 @@ class FullTextSearch {
     let x = Search.query(this.indexer.indexRepository, q);
     console.log(x);
   }
-
 }
 
 /********************************************************************
@@ -71,10 +71,12 @@ class Indexer {
  ********************************************************************/
 class Analyser {
   static analyse(rawText) {
-    let retVal = this.tokenize(rawText);
-    retVal = this.filterToLower(retVal);
-    retVal = this.filterStopWords(retVal);
-    return retVal;
+    let tokens = this.tokenize(rawText);
+    return tokens.map((token) => {
+      token = this.filterToLower(token);
+      token = this.filterStopWords(token);
+      return token;
+    });
   }
 
   static tokenize(rawText) {
@@ -82,18 +84,15 @@ class Analyser {
     return tokens.filter(Boolean);
   }
 
-  static filterToLower(tokens) {
-    return tokens.map((item) => {
-      return item.toLowerCase();
-    });
+  static filterToLower(token) {
+    return token.toLowerCase();
   }
 
-  static filterStopWords(tokens) {
-    tokens = tokens.map((item) => {
-      if (stopwords.stopwords.includes(item)) item = "";
-      return item.toLowerCase();
-    });
-    return tokens.filter(Boolean);
+  static filterStopWords(token) {
+    if (stopwords.stopwords.includes(token)) {
+      token = "";
+    }
+    return token.toLowerCase();
   }
 }
 
@@ -102,11 +101,10 @@ class Analyser {
  ********************************************************************/
 class Search {
   static query(index, rawText) {
-
     let results = {};
     let searchTokens = Analyser.analyse(rawText);
     searchTokens.forEach((t) => {
-      results[t] = { docIds: index[t]}
+      results[t] = { docIds: index[t] };
     });
     return results;
   }
