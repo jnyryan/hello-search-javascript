@@ -9,6 +9,11 @@ class FullTextSearch {
     this.indexer = new Indexer(docs);
   }
 
+  stats(){
+    console.log(`#Indexed Documents: ${Object.keys(this.documentRepository).length}`)
+    console.log(`#Corpus: ${Object.keys(this.indexer.indexRepository).length}`)
+
+  }
   reindex() {
     this.indexer.addBulk(this.documentRepository);
   }

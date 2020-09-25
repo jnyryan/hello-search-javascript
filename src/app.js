@@ -51,6 +51,7 @@ const main = () => {
     // const indexRepository = dataLoader.loadJsonl(src);
     const fts = new FullTextSearch(documentRepository);
     fts.reindex();
+    fts.stats();
     fts.search("achilles")
     fts.search("achievement")
     fts.search("International Academy")
