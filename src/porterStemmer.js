@@ -184,3 +184,7 @@ var stemmer = (function(){
 		return w;
 	}
 })();
+
+module.exports = {
+	stemmer
+}

@@ -1,4 +1,5 @@
 const stopwords = require("./stopwords.js");
+const porterStemmer = require("./porterStemmer.js");
 
 /********************************************************************
  * FullTextSearch
@@ -75,6 +76,7 @@ class Analyser {
     return tokens.map((token) => {
       token = this.filterToLower(token);
       token = this.filterStopWords(token);
+      token = this.filterStemmer(token);
       return token;
     });
   }
@@ -93,6 +95,10 @@ class Analyser {
       token = "";
     }
     return token.toLowerCase();
+  }
+
+  static filterStemmer(token) {
+    return porterStemmer.stemmer(token);
   }
 }
 
