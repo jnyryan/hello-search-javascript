@@ -1,85 +1,112 @@
-const stopwords = require("./stopwords.js")
-let documentRepository = {};
-let index = {};
+const stopwords = require("./stopwords.js");
 
-const setIndex = (idx) => {
-  index = idx;
-}
 /********************************************************************
- * query
- */
-const query = (str) => {
-  const searchTokens = analyse(str)
-  searchTokens.forEach((t) => {
-    index[t].forEach((docId) => {
-      console.log(t, index[t])
-      // console.log(documentRepository[docId]);
-    });
-  });
-};
+ * FullTextSearch
+ ********************************************************************/
+class FullTextSearch {
+  constructor(docs = null) {
+    this.documentRepository = docs;
+    this.indexer = new Indexer(docs);
+  }
+
+  reindex() {
+    this.indexer.addBulk(this.documentRepository);
+  }
+
+  search(q) {
+    let x = Search.query(this.indexer.indexRepository, q);
+    console.log(x);
+  }
+
+}
 
 /********************************************************************
  * Indexer
- */
+ ********************************************************************/
+class Indexer {
+  constructor(docs = null, index = null) {
+    this.documentRepository = docs;
+    this.indexRepository = index || {};
+  }
 
-/**
- * index all line in the file
- * @param {*} fileName
- */
-
-const addToIndex = (lines) => {
-  lines.forEach((line, i) => {
-    documentRepository[i] = line;
-    const tokens = analyse(line);
-    // console.log(i, tokens);
+  /**
+   * index all lines in the file
+   * @param {*} fileName
+   */
+  add(docId, documentJson, tokens) {
+    this.documentRepository[docId] = documentJson;
     tokens.forEach((t) => {
       try {
-        if (index[t]) {
-          index[t].push(i);
+        if (t in this.indexRepository) {
+          this.indexRepository[t].push(docId);
         } else {
-          index[t] = [];
-          index[t].push(i);
+          this.indexRepository[t] = [];
+          this.indexRepository[t].push(docId);
         }
       } catch (e) {
-        console.log(i, t, e);
+        console.log(docId, t, e);
       }
     });
-  });
-};
+  }
+
+  /**
+   * index all lines in the file
+   * @param {*} fileName
+   */
+  addBulk(lines) {
+    lines.forEach((line, docId) => {
+      const tokens = Analyser.analyse(line);
+      this.add(docId, line, tokens);
+    });
+  }
+}
 
 /********************************************************************
  * Analyser
- */
-const analyse = (rawText) => {
-  let retVal = tokenize(rawText);
-  retVal = filterToLower(retVal);
-  retVal = filterStopWords(retVal);
-  return retVal;
-};
+ ********************************************************************/
+class Analyser {
+  static analyse(rawText) {
+    let retVal = this.tokenize(rawText);
+    retVal = this.filterToLower(retVal);
+    retVal = this.filterStopWords(retVal);
+    return retVal;
+  }
 
-const tokenize = (rawText) => {
-  let tokens = rawText.replace(/\W/g, " ").split(" ");
-  return tokens.filter(Boolean);
-};
+  static tokenize(rawText) {
+    let tokens = rawText.replace(/\W/g, " ").split(" ");
+    return tokens.filter(Boolean);
+  }
 
-const filterToLower = (tokens) => {
-  return tokens.map((item) => {
-    return item.toLowerCase();
-  });
-};
+  static filterToLower(tokens) {
+    return tokens.map((item) => {
+      return item.toLowerCase();
+    });
+  }
 
+  static filterStopWords(tokens) {
+    tokens = tokens.map((item) => {
+      if (stopwords.stopwords.includes(item)) item = "";
+      return item.toLowerCase();
+    });
+    return tokens.filter(Boolean);
+  }
+}
 
-const filterStopWords = (tokens) => {
-  tokens = tokens.map((item) => {
-    if (stopwords.stopwords.includes(item)) item = "";
-    return item.toLowerCase();
-  });
-  return tokens.filter(Boolean);
-};
+/********************************************************************
+ * Search
+ ********************************************************************/
+class Search {
+  static query(index, rawText) {
+
+    let results = {};
+    let searchTokens = Analyser.analyse(rawText);
+    searchTokens.forEach((t) => {
+      results[t] = { docIds: index[t]}
+    });
+    return results;
+  }
+}
 
 module.exports = {
-  addToIndex,
-  query,
-  index,
-  setIndex
+  FullTextSearch,
 };

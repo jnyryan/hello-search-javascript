@@ -3,14 +3,15 @@ Extract Data from Wikipedia Dump file
 
 
 Usage:
-  extract-data.js search <query>
-  extract-data.js index <json>
-  extract-data.js index_all <src>
-  extract-data.js transform <src> <dest>
-  extract-data.js -h | --help | --version
+  fts.js search <query>
+  fts.js index <json>
+  fts.js test <src>
+  fts.js index_all <src>
+  fts.js transform <src> <dest>
+  fts.js -h | --help | --version
 `;
 
-const fullTextSearch = require("./fullTextSearch.js");
+const {FullTextSearch} = require("./fullTextSearch.js");
 const dataLoader = require("./dataLoader.js");
 
 const { docopt } = require("docopt");
@@ -20,7 +21,6 @@ var arguments = docopt(doc, {
 
 
 const main = () => {
-  // console.log(arguments);
   if (arguments.search) {
     let query = arguments["<query>"];
     console.log(`Searching for ${query}`);
@@ -42,7 +42,20 @@ const main = () => {
     fullTextSearch.addToIndex(data);
     dataLoader.saveIndex(JSON.stringify(fullTextSearch.index));
   }
-};
 
+  if (arguments.test) {
+    console.log(`TEST`);
+    const src = arguments["<src>"];
+    console.log(`Indexing_all for ${src}`);
+    const documentRepository = dataLoader.loadJsonl(src);
+    // const indexRepository = dataLoader.loadJsonl(src);
+    const fts = new FullTextSearch(documentRepository);
+    fts.reindex();
+    fts.search("achilles")
+    fts.search("achievement")
+    fts.search("International Academy")
+  }
+  // console.log(arguments);
+};
 
 main();

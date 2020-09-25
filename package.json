@@ -17,6 +17,7 @@
     "start": "node ./src/app.js",
     "index_all": "node ./src/app.js index_all './data/docs_sample.jsonl'",
     "search": "node ./src/app.js search",
+    "test": "node ./src/app.js test './data/docs_sample.jsonl'",
     "transform": "node ./src/app.js transform './data/enwiki-latest-abstract1.xml' './data/docs.jsonl' "
   },
   "repository": {
