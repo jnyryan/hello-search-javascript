@@ -1,0 +1,14 @@
+@startuml
+
+Title: Query
+
+Query->Analyser:Array of raw text
+Analyser->Query: tokens
+Query->Index:tokens
+Index->Query:array of document ids
+Query->Index: tokenized text
+Query->Storage: document ids
+Storage->Query: documents
+
+
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+Title: Document Importer
+
+Importer->Analyser:Array of\nraw text
+Analyser->Importer: tokenized text
+Importer->Indexer: tokenized text
+Indexer->Importer: index entry
+Importer->Storage: index entry
+
+@enduml
