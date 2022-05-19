@@ -7,42 +7,20 @@ Reference:
 
 [Porter Stemmer](https://tartarus.org/martin/PorterStemmer/js.txt)
 
+[TF-IDF](https://egkatzioura.com/2015/09/13/tf-idf-with-map-reduce-on-mongodb/)
+[Machine Learning: Full-Text Search in Javascript](https://burakkanber.com/blog/machine-learning-full-text-search-in-javascript-relevance-scoring/)
+
 ### Design
-``` sequence
-Title: Document Importer
 
-Importer->Analyser:Array of\nraw text
-Analyser->Importer: tokenized text
-Importer->Indexer: tokenized text
-Indexer->Importer: index entry
-Importer->Storage: index entry
+Sequence diagram for the Text Analyser
 
-```
+http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/documentAnalyser.puml?token=GHSAT0AAAAAABUAZMKBPGAY4IK26TNLL6S2YUGCRAA
 
-``` sequence
-Title: Analyser
 
-Analyser->Tokinizer: line of\nraw text
-Note over Tokinizer: each word broken on space\nwith position offset
-Tokinizer->Filters_ToLower: tokens
-Filters_ToLower->Filters_ToASCII: tokens
-Filters_ToASCII->Filters_ToStopWords: tokens
-Filters_ToStopWords->Filters_ToStemmer: tokens
-Filters_ToStemmer->Filters_ToStopWords: tokens
-Filters_ToStopWords->Tokinizer: tokens
-Tokinizer-->Analyser: tokens
+Sequence diagram for the Document Importer
 
-```
+http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/documentImporter.puml?token=GHSAT0AAAAAABUAZMKA3YR5XLUS43BARZV2YUGCRYQ
 
-``` sequence
-Title: Query
+Sequence diagram for the Query Analyser
 
-Query->Analyser:Array of\nraw text
-Analyser->Query: tokens
-Query->Index:tokens
-Index->Query:array of document ids
-Query->Index: tokenized text
-Query->Storage: document ids
-Storage->Query: documents
-
-```
+http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/queryDocument.puml?token=GHSAT0AAAAAABUAZMKAL2KRDDSH5DBVN2JGYUGCSHA
