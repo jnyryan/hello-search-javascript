@@ -11,14 +11,14 @@ Usage:
   fts.js -h | --help | --version
 `;
 
-const {FullTextSearch} = require("./fullTextSearch.js");
+const { FullTextSearch } = require("./fullTextSearch.js");
+const prompt = require("prompt");
 const dataLoader = require("./dataLoader.js");
 
 const { docopt } = require("docopt");
 var arguments = docopt(doc, {
   version: "1.0.0",
 });
-
 
 const main = () => {
   if (arguments.search) {
@@ -52,11 +52,18 @@ const main = () => {
     const fts = new FullTextSearch(documentRepository);
     fts.reindex();
     fts.stats();
-    fts.search("achilles")
-    fts.search("achievement")
-    fts.search("International Academy")
+    fts.search("achilles");
+    fts.search("achievement");
+    fts.search("International Academy");
+
+    prompt.start();
+    prompt.get("query", function (err, result) {
+      if (err) {
+        return onErr(err);
+      }
+      fts.search(result.query);
+    });
   }
-  // console.log(arguments);
 };
 
 main();

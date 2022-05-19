@@ -5,24 +5,36 @@ const porterStemmer = require("./porterStemmer.js");
  * FullTextSearch
  ********************************************************************/
 class FullTextSearch {
-  constructor(docs = null) {
-    this.documentRepository = docs;
-    this.indexer = new Indexer(docs);
+  constructor(docs) {
+    this.store = new Store(docs);
+    this.indexer = new Indexer(this.store);
+  }
+
+  stats() {
+    this.store.stats();
+  }
+
+  reindex() {
+    this.indexer.addBulk(this.store.documentRepository);
+  }
+
+  search(q) {
+    let x = Search.query(this.store.indexRepository, q);
+    console.log(x);
+  }
+}
+
+class Store {
+  constructor(docs = null, index = null) {
+    this.documentRepository = docs || [];
+    this.indexRepository = index || [];
   }
 
   stats() {
     console.log(
       `#Indexed Documents: ${Object.keys(this.documentRepository).length}`
     );
-    console.log(`#Corpus: ${Object.keys(this.indexer.indexRepository).length}`);
-  }
-  reindex() {
-    this.indexer.addBulk(this.documentRepository);
-  }
-
-  search(q) {
-    let x = Search.query(this.indexer.indexRepository, q);
-    console.log(x);
+    console.log(`#Corpus: ${Object.keys(this.indexRepository).length}`);
   }
 }
 
@@ -30,24 +42,24 @@ class FullTextSearch {
  * Indexer
  ********************************************************************/
 class Indexer {
-  constructor(docs = null, index = null) {
-    this.documentRepository = docs;
-    this.indexRepository = index || {};
+  constructor(store) {
+    this.store = store;
   }
 
   /**
    * index all lines in the file
    * @param {*} fileName
    */
-  add(docId, documentJson, tokens) {
-    this.documentRepository[docId] = documentJson;
+  add(docId, jsonDocument) {
+    this.store.documentRepository[docId] = jsonDocument;
+    const tokens = Analyser.analyse(jsonDocument);
     tokens.forEach((t) => {
       try {
-        if (t in this.indexRepository) {
-          this.indexRepository[t].push(docId);
+        if (t in this.store.indexRepository) {
+          this.store.indexRepository[t].push(docId);
         } else {
-          this.indexRepository[t] = [];
-          this.indexRepository[t].push(docId);
+          this.store.indexRepository[t] = [];
+          this.store.indexRepository[t].push(docId);
         }
       } catch (e) {
         console.log(docId, t, e);
@@ -60,9 +72,8 @@ class Indexer {
    * @param {*} fileName
    */
   addBulk(lines) {
-    lines.forEach((line, docId) => {
-      const tokens = Analyser.analyse(line);
-      this.add(docId, line, tokens);
+    lines.forEach((jsonDocument, docId) => {
+      this.add(docId, jsonDocument);
     });
   }
 }
@@ -118,4 +129,5 @@ class Search {
 
 module.exports = {
   FullTextSearch,
+  Store
 };
