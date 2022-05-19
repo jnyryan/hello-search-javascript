@@ -12,15 +12,15 @@ Reference:
 
 ### Design
 
-Sequence diagram for the Text Analyser
+#### Sequence diagram for the Text Analyser
 
-![alternative text](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/documentAnalyser.puml?token=GHSAT0AAAAAABUAZMKBPGAY4IK26TNLL6S2YUGCRAA)
+![alternative text](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/documentAnalyser.puml)
 
 
-Sequence diagram for the Document Importer
+#### Sequence diagram for the Document Importer
 
-![alternative text](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/documentImporter.puml?token=GHSAT0AAAAAABUAZMKA3YR5XLUS43BARZV2YUGCRYQ)
+![alternative text](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/documentImporter.puml)
 
-Sequence diagram for the Query Analyser
+#### Sequence diagram for the Query Analyser
 
-![alternative text](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/queryDocument.puml?token=GHSAT0AAAAAABUAZMKAL2KRDDSH5DBVN2JGYUGCSHA)
+![alternative text](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/jnyryan/hello-search-javascript/master/docs/umlDiagrams/queryDocument.puml)
